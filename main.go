@@ -20,7 +20,7 @@ func uploadHandler(w http.ResponseWriter, r *http.Request) {
 	defer file.Close()
 	log.Println("Incoming: ", header.Filename)
 
-	out, err := os.Create(path.Join("files", header.Filename))
+	out, err := os.Create(path.Join("uploads", header.Filename))
 	if err != nil {
 		fmt.Fprintf(w, "Unable to create the file for writing. Check your write access privilege")
 		return
@@ -43,7 +43,7 @@ func main() {
 		http.ServeFile(w, r, "./form.html")
 		return
 	})
-	http.Handle("/uploads/", http.StripPrefix("/files/", http.FileServer(http.Dir("uploads"))))
+	http.Handle("/uploads/", http.StripPrefix("/uploads/", http.FileServer(http.Dir("uploads"))))
 	http.HandleFunc("/post", uploadHandler)
 	http.ListenAndServe(":8080", nil)
 }
